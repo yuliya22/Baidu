@@ -1,0 +1,30 @@
+baidu-map{
+  display: block;
+  width: 100%;
+  height: 700px;
+}
+.baidu-map-instance{
+  height: 600px !important;
+}
+mat-card {
+ margin:0px;
+ margin-left: 2%;
+}
+mat-card mat-card-content{
+  padding:0px !important;
+}
+.buttonPlus{
+  float:right;
+}
+.buttonMinus{
+  float:right;
+}
+.inputFrom{
+  width:75%;
+}
+.inputWay{
+  width:75%;
+}
+.inputTo{
+  width:75%;
+}

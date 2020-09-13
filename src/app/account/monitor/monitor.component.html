@@ -1,0 +1,41 @@
+<div fxLayout="row">
+  <div fxFlex.gt-sm="100%">
+    <div class='mapDiv'>
+      <baidu-map [options]="optionsMap" (loaded)="mapLoaded($event)">
+        <control type="navigation" [options]="navOptionsMap"></control>
+        <ng-container *ngFor="let marker of markers;let i = index">
+          <ng-container  *ngIf="selectionStatus[i]===true">
+          <!-- <marker
+          [point]="marker.point" [options]="marker.options"
+          (loaded)="setAnimation($event)">
+          </marker> -->
+          <!-- <circle [center]="marker.point" radius="100" [options]="circleOptions"></circle> -->
+          <canvaslayer [options]="marker.canvaslayerOptions"></canvaslayer>
+          </ng-container>
+        </ng-container>
+      </baidu-map>
+    </div>
+    <div class='leftsideDiv'>
+      <mat-card>
+        <mat-card-content>
+          <mat-form-field>
+            <input matInput list="id-car" placeholder="Search Vehicle" [(ngModel)]="this.query.query"  (keyup)="getMonitorSeachlist()" (change)="searchConfirm()">
+          </mat-form-field>
+          <datalist id="id-car">
+            <option *ngFor="let item of searchResult" [value]="item.name">{{item.name}}</option>
+          </datalist>
+        </mat-card-content>
+        <mat-card-content>
+             <mat-checkbox (change)="checkBoxall()" [(ngModel)]="selectAll">
+               Search list: {{foundedItem.length}}
+             </mat-checkbox>
+             <mat-progress-bar [mode]="foundedItem.length? 'determinate':'buffer'" [value]="foundedItem.length? 100:0"></mat-progress-bar>
+             <hr/>
+             <mat-checkbox *ngFor="let item of foundedItem; let i = index" [value]="i" [(ngModel)]="selectionStatus[i]">
+                {{item.name}}
+             </mat-checkbox>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </div>
+</div>

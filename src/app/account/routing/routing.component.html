@@ -1,0 +1,65 @@
+<div fxLayout="row">
+  <div fxFlex.gt-sm="100%">
+    <mat-card>
+      <mat-card-content>
+        <mat-grid-list cols="4" rowHeight="650px">
+          <mat-grid-tile colspan="3" rowspan="1">
+              <baidu-map [options]="optionsMap" (loaded)="mapLoaded($event)">
+                <!-- <control type="navigation" [options]="navOptionsMap"></control>
+                <ng-container *ngFor="let marker of markers;let i = index">
+                  <ng-container  *ngIf="selectionStatus[i]===true">
+                  <marker [point]="marker.point" [options]="marker.options">
+                  </marker>
+                  </ng-container>
+                </ng-container> -->
+              </baidu-map>
+          </mat-grid-tile>
+          <mat-grid-tile colspan="1" rowspan="1">
+            <mat-card>
+              <mat-card-content>
+                <!-- //searchFrom -->
+                <button mat-icon-button color="primary" [disabled]="!enableFrom">
+                  <mat-icon>favorite</mat-icon>
+                </button>
+                <mat-form-field class="inputFrom">
+                  <input matInput list="id-From" placeholder="From where?" [(ngModel)]="queryFrom.query" (keyup)="getLocationlist('from')" (change)="confirmLocation('from')">
+                </mat-form-field>
+                <button colspan="1" mat-mini-fab color="primary" class="buttonPlus" (click)="plusWay()" [disabled]="!enablePlus">+</button>
+                <datalist id="id-From">
+                  <option *ngFor="let item of searchResultFrom" [value]="item.name">{{item.name}}</option>
+                </datalist>
+                <!-- //searchWay -->
+                <ng-container *ngFor="let way of queryWay; let i = index">
+                  <button mat-icon-button color="primary" [disabled]="!enableWay[i]">
+                    <mat-icon>favorite</mat-icon>
+                  </button>
+                  <mat-form-field class="inputWay">
+                    <input matInput list="id-way" placeholder="middle ways?"
+                     [(ngModel)]="this.way.query"
+                     (keyup)="getLocationlist('way',i)" (change)="confirmLocation('way',i)">
+                  </mat-form-field>
+                  <button colspan="1" mat-mini-fab color="warn" class="buttonMinus" (click)="minusWay(i)">-</button>
+                </ng-container>
+                <datalist id="id-way">
+                  <option *ngFor="let item of searchResultWay" [value]="item.name">{{item.name}}</option>
+                </datalist>
+                <!-- //searchTo -->
+                <button mat-icon-button color="primary" [disabled]="!enableTo">
+                  <mat-icon>favorite</mat-icon>
+                </button>
+                <mat-form-field class="inputTo">
+                  <input matInput list="id-To" placeholder="Target place?" [(ngModel)]="queryTo.query"
+                  (keyup)="getLocationlist('to')" (change)="confirmLocation('to')">
+                </mat-form-field>
+                <button colspan="1" mat-mini-fab color="primary" class="buttonMinus" (click)="caculateWay()" [disabled]="!enableCaculate">=</button>
+                <datalist id="id-To">
+                  <option *ngFor="let item of searchResultTo" [value]="item.name">{{item.name}}</option>
+                </datalist>
+              </mat-card-content>
+          </mat-card>
+          </mat-grid-tile>
+        </mat-grid-list>
+      </mat-card-content>
+    </mat-card>
+  </div>
+</div>

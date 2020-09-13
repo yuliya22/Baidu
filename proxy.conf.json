@@ -1,0 +1,22 @@
+{
+  "/baidu/place/search": {
+    "target": "http://api.map.baidu.com/place/v2/search",
+    "secure": true,
+    "changeOrigin": true,
+    "pathRewrite": {
+      "^/baidu/place/search": ""
+    }
+  },
+  "/baidu/route/truck": {
+    "target": "http://api.map.baidu.com/logistics_direction/v1/truck",
+    "secure": true,
+    "changeOrigin": true,
+    "pathRewrite": {
+      "^/baidu/place/search": ""
+    }
+  },
+  "/api/*": {
+    "target": "http://localhost:3000",
+    "secure": false
+  }
+}

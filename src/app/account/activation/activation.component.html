@@ -1,0 +1,135 @@
+<div fxLayout="row wrap">
+  <div fxFlex.gt-lg="100" fxFlex.gt-md="100" fxFlex.gt-xs="100" fxFlex="100">
+    <mat-card>
+      <mat-card-content>
+        <mat-card-title>Activation of your vehicles</mat-card-title>
+        <form class="basic-form" [formGroup]="formGroup">
+          <!-- 1 -->
+          <div fxLayout="row wrap">
+            <div fxFlex.gt-lg="33" fxFlex.gt-md="33" fxFlex.gt-xs="50" fxFlex="50">
+              <mat-form-field>
+                <input matInput placeholder="VehicleID" formControlName="VehicleID">
+              </mat-form-field>
+            </div>
+            <div fxFlex.gt-lg="33" fxFlex.gt-md="33" fxFlex.gt-xs="50" fxFlex="50">
+              <mat-form-field>
+                <input matInput placeholder="Plate Number" formControlName="PlateNumber">
+              </mat-form-field>
+            </div>
+            <div fxFlex.gt-lg="33" fxFlex.gt-md="33" fxFlex.gt-xs="50" fxFlex="50" >
+              <mat-form-field>
+                <input matInput placeholder="Driver Name" formControlName="DriverName">
+              </mat-form-field>
+            </div>
+          </div>
+          <!-- 2 -->
+          <div fxLayout="row wrap">
+            <div fxFlex.gt-lg="33" fxFlex.gt-md="33" fxFlex.gt-xs="50" fxFlex="50" >
+              <mat-form-field>
+                <mat-select placeholder="Country" formControlName="Country">
+                  <mat-option value="USA" selected>USA</mat-option>
+                  <mat-option value="Other Country">Other Country</mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+            <div fxFlex.gt-lg="33" fxFlex.gt-md="33" fxFlex.gt-xs="50" fxFlex="50" >
+              <mat-form-field>
+                <mat-select placeholder="Group" formControlName="Group">
+                  <mat-option value="groupA" selected>groupA</mat-option>
+                  <mat-option value="groupB">groupB</mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+            <div fxFlex.gt-lg="33" fxFlex.gt-md="33" fxFlex.gt-xs="50" fxFlex="50" >
+              <mat-form-field>
+                <mat-select placeholder="Category" formControlName="Category">
+                  <mat-option value="SUV" selected>SUV</mat-option>
+                  <mat-option value="Crossover">Crossover</mat-option>
+                  <mat-option value="Sedan">Sedan</mat-option>
+                  <mat-option value="Hatchback">Hatchback</mat-option>
+                  <mat-option value="Convertible">Convertible</mat-option>
+                  <mat-option value="Bus">Bus</mat-option>
+                  <mat-option value="Semi-truck">Semi-truck</mat-option>
+                  <mat-option value="Box-truck">Box-truck</mat-option>
+                  <mat-option value="Cargo-Van">Cargo-Van</mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+          </div>
+          <!-- 3 -->
+          <div fxLayout="row wrap">
+            <div fxFlex.gt-lg="33" fxFlex.gt-md="33" fxFlex.gt-xs="50" fxFlex="50" >
+              <mat-form-field>
+                <mat-select placeholder="Engine Type" formControlName="EngineType">
+                  <mat-option value="Gasoline" selected>Gasoline</mat-option>
+                  <mat-option value="Diesel">Diesel</mat-option>
+                  <mat-option value="Hybrid">Hybrid</mat-option>
+                  <mat-option value="Electric">Electric</mat-option>
+                  <mat-option value="CNG">CNG</mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+            <div fxFlex.gt-lg="33" fxFlex.gt-md="33" fxFlex.gt-xs="50" fxFlex="50">
+              <mat-form-field>
+                <input matInput placeholder="VIN" formControlName="VIN">
+              </mat-form-field>
+            </div>
+            <div fxFlex.gt-lg="33" fxFlex.gt-md="33" fxFlex.gt-xs="50" fxFlex="50">
+              <mat-form-field>
+                <mat-select placeholder="">
+                </mat-select>
+              </mat-form-field>
+            </div>
+          </div>
+          <!-- 4 -->
+          <div fxLayout="row wrap">
+            <div fxFlex.gt-lg="33" fxFlex.gt-md="33" fxFlex.gt-xs="50" fxFlex="50">
+              <mat-form-field>
+                <mat-select placeholder="Time" formControlName="Time">
+                  <mat-option value="Etc/GMT+12(-12:00)" selected>Etc/GMT+12(-12:00)</mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+            <div fxFlex.gt-lg="33" fxFlex.gt-md="33" fxFlex.gt-xs="50" fxFlex="50">
+              <mat-form-field>
+                <input matInput placeholder="Name on credit card" formControlName="cardName">
+              </mat-form-field>
+            </div>
+            <div fxFlex.gt-lg="33" fxFlex.gt-md="33" fxFlex.gt-xs="50" fxFlex="50">
+              <mat-form-field>
+                <input matInput placeholder="Credit card number" formControlName="cardNumber">
+              </mat-form-field>
+            </div>
+          </div>
+          <!-- 5 -->
+          <div fxLayout="row wrap">
+            <div fxFlex.gt-lg="33" fxFlex.gt-md="33" fxFlex.gt-xs="50" fxFlex="50">
+              <mat-form-field>
+                <input matInput placeholder="Expiration date" formControlName="ExpirationDate">
+              </mat-form-field>
+            </div>
+            <div fxFlex.gt-lg="33" fxFlex.gt-md="33" fxFlex.gt-xs="50" fxFlex="50">
+              <mat-form-field>
+                <input matInput placeholder="Security Code" formControlName="SecurityCode">
+              </mat-form-field>
+            </div>
+            <div fxFlex.gt-lg="33" fxFlex.gt-md="33" fxFlex.gt-xs="50" fxFlex="50">
+              <mat-form-field>
+                <mat-select placeholder="Auto Renew" formControlName="AutoRenew">
+                  <mat-option value="Yes">Yes</mat-option>
+                  <mat-option value="No">No</mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+          </div>
+          <!-- submit -->
+          <div fxLayout="row wrap">
+            <div fxFlex.gt-sm="100" fxFlex="100">
+              <button mat-raised-button color="primary" (click)="activate()"> Activate</button>
+            </div>
+          </div>
+        </form>
+      </mat-card-content>
+    </mat-card>
+  </div>
+</div>

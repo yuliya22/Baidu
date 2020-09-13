@@ -1,0 +1,27 @@
+baidu-map{
+  display: block;
+  width: 100%;
+  height: 700px;
+}
+.baidu-map-instance{
+  height: 700px !important;
+}
+.mapDiv{
+  float: left;
+  width: calc(100% - 300px);
+  position: relative;
+  overflow: hidden;
+  display: table-cell;
+}
+.myContainer{
+  padding: 0px;
+  margin-top: 20px;
+}
+.leftsideDiv{
+  width: 300px;
+  float: left;
+  overflow: auto;
+  padding: 15px 10px;
+  border-left: 2px solid rgb(221, 221, 221);
+  height: auto;
+}

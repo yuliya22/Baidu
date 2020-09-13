@@ -1,0 +1,10 @@
+Hi, marcov.
+I have made this txt file for one questions.
+
+1.How can i get vehicle information (latitude and longtitude)?
+  My knowledge of baidu map is if i have lat and lontitude info about sth, i can display it on map.
+  Maybe you ve waste exprerience about it and it will be cop of tea.
+  I wanna you to give me details about http request method and abailable api key(one you given me is not working!)
+2. not yet.
+---END---
+Thank you for your very kind attention for my new beginner team.

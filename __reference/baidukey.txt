@@ -1,0 +1,88 @@
+ropBmBLUN08c9yV5MfDypPtGEFAjg0dZ
+//baidu-api key
+z45YihwOQtgSEbUBnlx2gmVXCaGW7RPs
+
+//query example
+http://api.map.baidu.com/place/v2/search?query=%E5%A4%A7%E8%BF%9E%E5%8C%97%E7%AB%99%20machine&region=Beijing&ak=z45YihwOQtgSEbUBnlx2gmVXCaGW7RPs&output=json
+314路
+
+import {ControlAnchor,MapOptions,NavigationControlOptions,NavigationControlType,} from 'angular2-baidu-map';
+	declare var BMap: any;
+	public opts: MapOptions;
+	public markers: any[] = [];
+	local: any;
+	navOptions: NavigationControlOptions;
+	constructor() {
+		This.opts = { //Set the map initialization center point and other settings
+  			   currentCity: 'Qingdao',
+  			minZoom: 1,
+  			maxZoom: 18,
+  			enableScrollWheelZoom: true,
+  			centerAndZoom: {
+    			lat: 36,
+    			lng: 120,
+    			zoom: 16
+  			},
+  			enableKeyboard: true
+	};
+	this.navOptions = {
+  		anchor: ControlAnchor.BMAP_ANCHOR_TOP_RIGHT,
+  		type: NavigationControlType.BMAP_NAVIGATION_CONTROL_PAN
+	};
+}
+ Search(e: any) { // Corresponding to the loaded event in baidu-map, that is, the method that is run when the map is loaded. The official introduction e can be a map instance.
+	let _this = this;
+	 / / Create a search class instance
+	this.local = new BMap.LocalSearch(e, {
+  		renderOptions: {map: e, autoViewport: true, selectFirstResult: false},
+  		pageCapacity: 10
+	});
+	 / / Set the callback function when the query is completed
+	this.local.setSearchCompleteCallback(async (searchResults) => {
+    	     Let markeSize = this.markers.length; //Each search will leave a mark on the map, this is to remove the previously left mark
+    	for (let i = 0; i < markeSize; i++) {
+     	 	e.removeOverlay(this.markers[i]);
+    	}
+    this.markers = [];
+         If (typeof(searchResults) == "undefined") { // Verify search results
+             Alert ("Baidu API did not search for this address");
+      return;
+    }
+    let searchResult = [];
+         searchResult = searchResults.Lq; // The query result exists in searchResults.Lq
+    let size = searchResult.length;
+    let temp;
+         Let myIcon = new BMap.Icon("http://api.map.baidu.com/img/markers.png", new BMap.Size(23, 25), { // Set map markers icon
+      offset: new BMap.Size(10, 25),
+      imageOffset: new BMap.Size(0, 0 - 10 * 25)
+    });
+    let contents = [];
+    for (let i = 0; i < size; i++) {
+             _this.markers[i] = new BMap.Marker(new BMap.Point(searchResult[i].point.lng, searchResult[i].point.lat), {icon: myIcon});//Add an identifier to the map
+             / / Click on the logo to display the content
+             Contents[i] = "The place you are looking for: [" + searchResult[i].title + "] Address: " + searchResult[i].address;// Latitude and longitude in searchResult[i].point.lng, searchResult[ i].point.lat
+      _this.markers[i].title = contents[i];
+             / / Add click event listener
+      _this.markers[i].addEventListener("click", () => {
+        	var infoWindow = new BMap.InfoWindow("<p style='font-size:14px;'>" + contents[i] + "</p>");
+        	_this.markers[i].openInfoWindow(infoWindow);
+             });// Display the identification point information when clicking the logo
+             e.addOverlay(_this.markers[i]);// Add an identifier
+             If (i == 0) { // The first result of the query is displayed by default
+        var infoWindow = new BMap.InfoWindow("<p style='font-size:14px;'>" + contents[0] + "</p>");
+        _this.markers[0].openInfoWindow(infoWindow);
+      }
+    }
+  }
+);
+}
+ // address search
+getAddress() {
+	 This.local.search("Qingdao May Fourth Square"); // Where you need to search
+}
+
+ Reference document
+1. https://leftstick.github.io/angular2-baidu-map/#/apidoc/baidu-map
+2. http://lbsyun.baidu.com/cms/jsapi/reference/jsapi_reference.html#a0b0
+
+
