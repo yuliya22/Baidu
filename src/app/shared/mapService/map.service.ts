@@ -18,8 +18,25 @@ export class MapService {
   registerVehicleInfo(data){
     return this.http.post("/api/vehicle/registerInfo",data);
   }
+  updateVehicleInfo(data){
+    return this.http.post("/api/vehicle/updateInfo",data);
+  }
   getVehicleInfo(data){
    return this.http.post("/api/vehicle/getInfo",data);
+  }
+  getVehicleInfoAll(data){
+    return this.http.post("/api/vehicle/getAll",data);
+   }
+  //getTrackInfo
+  getTrackInfoLast(data){
+    return this.http.post("/api/track/getTrackInfoLast",data);
+  }
+   //getTrackInfo
+   getReportInfoAll(data){
+    return this.http.post("/api/report/getAll",data);
+  }
+  getTripInfo(data){
+    return this.http.post("/api/track/getTripInfo",data);
   }
   //Location Search
   locationSearch(data: QueryLocation){

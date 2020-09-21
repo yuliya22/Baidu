@@ -13,6 +13,7 @@ import { RouterModule } from '@angular/router';
 import { BaiduMapModule } from 'angular2-baidu-map';
 import { DemoMaterialModule } from '../demo-material-module';
 import { MapComponent } from './map/map.component';
+import { ChartistModule } from 'ng-chartist';
 @NgModule({
   declarations: [
     MonitorComponent,
@@ -27,6 +28,7 @@ import { MapComponent } from './map/map.component';
     CommonModule,
     FlexLayoutModule,
     DemoMaterialModule,
+    ChartistModule,
     FormsModule,
     ReactiveFormsModule,
     RouterModule.forChild(AccountRoutes),

@@ -1,7 +1,7 @@
 baidu-map{
   display: block;
   width: 100%;
-  height: 700px;
+  height: 690px;
 }
 .baidu-map-instance{
   height: 700px !important;
@@ -21,7 +21,65 @@ baidu-map{
   width: 300px;
   float: left;
   overflow: auto;
-  padding: 15px 10px;
+  padding: 0px;
   border-left: 2px solid rgb(221, 221, 221);
-  height: auto;
+  height: 690px;
+}
+.no-shadow mat-toolbar{
+    box-shadow: none;
+}
+mat-card{
+  margin: 0px;
+  height: 690px;
+}
+mat-icon{
+  float: right;
+}
+.vehicleList{
+  font-size: 12px;
+  font-weight: 800;
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
+  border-bottom:0.5px solid darkblue;
+}
+.example-fill-remaining-space {
+  flex: 1 1 auto;
+}
+.example-icon {
+  padding: 3px 14px;
+  font-size: 16px;
+  float: right;
+}
+
+.example-spacer {
+  flex: 1 1 auto;
+}
+.introductionStatus {
+  position: relative;
+  top: -71px;
+  right: 5px;
+  float: right;
+  background-color: white;
+  width: fit-content;
+}
+.vehicleTable{
+  position: absolute;
+  top: 29px;
+  left: 30px;
+  z-index: 1000;
+  width: 70%;
+}
+table{
+  width: 100%;
+  background-color: linen;
+  font-family: inherit;
+  text-align: center;
+}
+td{
+  text-align: left;
+  background-color: blueviolet;
+}
+.closeBUTTON{
+  position: absolute;
+  top:3px;
+  right: 3px;
 }

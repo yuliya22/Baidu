@@ -15,12 +15,12 @@ export const AccountRoutes: Routes = [
       {
         path: 'monitor',
         component: MonitorComponent,
-        canActivate:[AuthGuard],
+        // canActivate:[AuthGuard],
       },
       {
         path: 'replay',
         component: ReplayComponent,
-        canActivate:[AuthGuard],
+        // canActivate:[AuthGuard],
       },
       {
         path: 'activation',

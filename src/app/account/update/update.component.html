@@ -1,1 +1,35 @@
-<p>update works!</p>
+<mat-card>
+  <mat-card-content>
+    <mat-card-title>Update info of your vehicle</mat-card-title>
+    <form class="basic-form" [formGroup]="formGroup">
+      <!-- 1 -->
+      <div fxLayout="row wrap">
+        <div fxFlex.gt-lg="100" fxFlex.gt-md="100" fxFlex.gt-xs="100" fxFlex="100">
+          <mat-form-field>
+            <input matInput placeholder="VehicleNumber" formControlName="VehicleNumber">
+          </mat-form-field>
+        </div>
+      </div>
+      <div fxLayout="row wrap">
+        <div fxFlex.gt-lg="100" fxFlex.gt-md="100" fxFlex.gt-xs="100" fxFlex="100">
+          <mat-form-field>
+            <input matInput placeholder="CameraID" formControlName="CameraID">
+          </mat-form-field>
+        </div>
+      </div>
+      <div fxLayout="row wrap">
+        <div fxFlex.gt-lg="100" fxFlex.gt-md="100" fxFlex.gt-xs="100" fxFlex="100" >
+          <mat-form-field>
+            <input matInput placeholder="PhoneNumber" formControlName="PhoneNumber">
+          </mat-form-field>
+        </div>
+      </div>
+      <!-- submit -->
+      <div fxLayout="row wrap">
+        <div fxFlex.gt-sm="100" fxFlex="100">
+          <button mat-raised-button color="primary" (click)="update()"> Update</button>
+        </div>
+      </div>
+    </form>
+  </mat-card-content>
+</mat-card>

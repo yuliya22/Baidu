@@ -1,7 +1,7 @@
-import { QueryLocation } from './../../shared/mapService/queryLocation.model';
 import { MapService } from './../../shared/mapService/map.service';
 import { UserService } from './../../shared/userService/user.service'
-import { Component, OnInit, DoCheck} from '@angular/core';
+import { AfterViewInit, ViewChild} from '@angular/core';
+import { Component, OnInit, DoCheck, Directive, HostListener} from '@angular/core';
 import {
   ControlAnchor,
   MapOptions,
@@ -16,64 +16,59 @@ import {
   MarkerOptions,
   Animation,
 } from 'angular2-baidu-map';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatSort } from '@angular/material/sort';
+import { MatTableDataSource} from '@angular/material/table';
+export interface BehaviorElement {
+  Plate: string;
+  cameraID: string;
+  lat: string;
+  lng: number;
+}
 @Component({
   selector: 'app-monitor',
   templateUrl: './monitor.component.html',
   styleUrls: ['./monitor.component.css']
 })
-export class MonitorComponent implements OnInit {
+@Directive({
+  selector: '[appMousePosition]'
+})
+export class MonitorComponent implements OnInit,AfterViewInit {
   //user
   user = '';
   //Map_Settings
+  markers = [];
   title = 'angular5 Baidu-Map example';
-  region = 'Beijing';
-  enableMap = false ;
   optionsMap: MapOptions;
   mapControl: BMapInstance;
   point: Point;
   navOptionsMap: NavigationControlOptions;
-  markers: Array<{ point?: Point; options?: MarkerOptions; canvaslayerOptions?: CanvasLayerOptions}>;
-  markerOption = {
-    icon: {
-      imageUrl: `assets/images/markericon.png`,
-      size: {
-        height: 35,
-        width: 25
-      },
-      imageSize: {
-        height: 35,
-        width: 25
-      }
-    },
-   title: 'beijing',
-  };
-  circleOptions = {
-    strokeColor: 'blue',
-    strokeWeight: 2
-  };
   mapcenter = {
     lat: 39.915,
     lng: 116.404,
   };
   sight = 400;
   mapzoom = 17;
-  query: QueryLocation ={
-    query:'',
-    region:'',
-  };
   //SearchBar_Settings
+  key;
   selectedItem = "";
-  searchResult = [];
   //selectionTable_Settings.
   foundedItem = [];
   selectionStatus = [];
-  selectAll = false;
+  selectAll = true;
+  //table
+  tableStatus = false;
+  infos=[];
+  tableVal=[];
+  tableBehaviorColBe: string[] = ['Plate', 'cameraID', 'lat', 'lng'];
+  dataSourceBe = new MatTableDataSource<BehaviorElement>([]);
+  @ViewChild(MatPaginator,{ static: false }) paginator: MatPaginator;
+  @ViewChild(MatSort,{ static: false }) sort: MatSort;
   constructor(
     private mapService: MapService,
     private userService: UserService,
   ) {
     //map
-    this.query.region=this.region;
     this.optionsMap = {
       centerAndZoom: {
         lat: this.mapcenter.lat,
@@ -83,27 +78,30 @@ export class MonitorComponent implements OnInit {
       enableKeyboard: true,
       enableScrollWheelZoom: true,
     };
-    this.markers = [];
     this.navOptionsMap = {
       anchor: ControlAnchor.BMAP_ANCHOR_TOP_RIGHT,
       type: NavigationControlType.BMAP_NAVIGATION_CONTROL_ZOOM,
     };
-    this.getAll();
+
    }
-ngOnInit(){
-}
+  ngOnInit(){
+  }
+  ngAfterViewInit() {
+    this.dataSourceBe.paginator = this.paginator;
+    this.dataSourceBe.sort = this.sort;
+  }
 //user
 getAll(){
   this.userService.getUserProfile().subscribe(
     res=>{
       this.user= res["user"].email;
-      this.mapService.getVehicleInfo({auth:this.user}).subscribe(
+      this.mapService.getVehicleInfoAll({auth:this.user}).subscribe(
         res=>{
-          console.log(res);
-
+          this.setCheckBox(res['result']);
+          this.setTrackInfo(res['result']);
         },
         err=>{
-          console.log(err);
+          alert(err.error.message);
         }
       );
     },
@@ -112,26 +110,45 @@ getAll(){
     }
   );
 }
-//For searchResult
-getMonitorSeachlist(){
-
-  this.mapService.locationSearch(this.query).subscribe(
+//For trackInfo
+setTrackInfo(data){
+  this.mapService.getTrackInfoLast({data:data}).subscribe(
     res=>{
-       if(res["results"].length){
-          this.searchResult=res["results"];
-       }
+      this.setMap(res["result"]);
+      this.infos=res["result"];
     },
     err=>{
-       console.log(err);
+      alert(err.error.message);
     }
   );
 }
-searchConfirm(){
-  if(this.searchResult.length>0){
-    this.setMap(this.searchResult[0]);
+//for VehicleInfo
+showInfo(){
+  this.setTable();
+  this.tableStatus=true;
+}
+tableClose(){
+  this.tableStatus=false;
+}
+setTable(){
+  this.tableVal=[];
+  for(let i =0; i< this.infos.length; i++){
+    const d={
+      'Plate':this.infos[i].VehicleNumber,
+      'cameraID':this.infos[i].CameraID,
+      'lat':this.infos[i].lat,
+      'lng':this.infos[i].lng,
+    }
+    this.tableVal.push(d);
   }
+  this.dataSourceBe = new MatTableDataSource<BehaviorElement>(this.tableVal);
 }
 //For selection table
+setCheckBox(data){
+  this.foundedItem = data;
+  for(let i = 0; i< data.length; i++)
+   this.selectionStatus.push(true);
+}
 checkBoxall(){
     this.checkSetAll(this.selectAll);
 }
@@ -140,27 +157,27 @@ checkSetAll(status) {
     this.selectionStatus[i]=status;
   }
 }
+checkKey(key, string:string){
+  if(!key) return true;
+  if(string.indexOf(key)!=-1) return true
+  else return false;
+}
 //For Maps
 mapLoaded(e:BMapInstance){
-  this.enableMap = true;
   this.mapControl = e;
+  this.getAll();
+}
+@HostListener('mousemove', ['$event']) onMouseMove(event) {
+  console.log(event.clientX, event.clientY);
 }
 setMap(opt){
-  this.markerOption.title = opt.name;
-  const newMarker = {
-    options:this.markerOption,
-    point: {
-      lat: opt.location.lat,
-      lng: opt.location.lng,
-    },
-    canvaslayerOptions: this.getCanvasLayer(opt),
-  };
-   this.selectionStatus.unshift(true);
-   this.markers.unshift(newMarker);
-   this.foundedItem.unshift(opt);
-   this.selectAll = true;
-   this.searchResult = [];
-   this.setZoomAndCenter(opt);
+  this.setZoomAndCenter(opt);
+  for(let i = 0 ; i < opt.length ; i ++){
+    const newMarker = {
+      canvaslayerOptions: this.getCanvasLayer(opt[i]),
+    };
+    this.markers.push(newMarker);
+  }
 }
 getCanvasLayer(opt){
   const layer = {
@@ -170,14 +187,14 @@ getCanvasLayer(opt){
         return
       }
       ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height)
-      var data = new window.BMap.Point(opt.location.lng, opt.location.lat)
+      var data = new window.BMap.Point(opt.lng, opt.lat)
       var pixel = map.pointToPixel(data);
       //set
       const radius = 30;
       const textsize = 15;
       const circleLineWidth = 5;
       const textLineWidth = 0.5;
-      const name : string = opt.name;
+      const name : string = opt.VehicleNumber;
       const text = name.substr(0,Math.floor(1.5*radius/textsize));
       //circle
       ctx.beginPath();
@@ -209,11 +226,10 @@ getCanvasLayer(opt){
   return layer;
 }
 setZoomAndCenter(opt){
-  if(this.markers.length==0) return;
-  const CZ = this.getCenter();
+  const CZ = this.getCenter(opt);
   const center = {
     lat: CZ.lat,
-    lng:CZ.lng,
+    lng: CZ.lng,
     equals:Boolean,
   };
   const centerCritical = {
@@ -228,19 +244,19 @@ setZoomAndCenter(opt){
   this.mapControl.setZoom(zoom);
   this.mapcenter = { lat: CZ.lat, lng:CZ.lng };
 }
-getCenter(){
-  if(this.markers.length==0) return;
-  if(this.markers.length==1) return {lat:this.markers[0].point.lat, lng:this.markers[0].point.lng ,zoom: this.mapControl.getZoom()};
+getCenter(opt){
+  if(opt.length==0) return;
+  if(opt.length==1) return {lat:opt[0].lat, lng:opt[0].lng ,zoom: this.mapControl.getZoom()};
   let minLat, maxLat, minLng, maxLng, avgLat, avgLng;
-  minLat = this.markers[0].point.lat;
-  maxLat = this.markers[0].point.lat;
-  minLng = this.markers[0].point.lng;
-  maxLng = this.markers[0].point.lng;
-  for(let i = 0 ; i < this.markers.length ; i++ ){
-    if(this.markers[i].point.lat < minLat) minLat = this.markers[i].point.lat;
-    if(this.markers[i].point.lat > maxLat) maxLat = this.markers[i].point.lat;
-    if(this.markers[i].point.lng < minLng) minLng = this.markers[i].point.lng;
-    if(this.markers[i].point.lng > maxLng) maxLng = this.markers[i].point.lng;
+  minLat = Number(opt[0].lat);
+  maxLat = Number(opt[0].lat);
+  minLng = Number(opt[0].lng);
+  maxLng = Number(opt[0].lng);
+  for(let i = 0 ; i < opt.length ; i++ ){
+    if(opt[i].lat < minLat) minLat = Number(opt[i].lat);
+    if(opt[i].lat > maxLat) maxLat = Number(opt[i].lat);
+    if(opt[i].lng < minLng) minLng = Number(opt[i].lng);
+    if(opt[i].lng > maxLng) maxLng = Number(opt[i].lng);
   }
   avgLat =minLat+ (maxLat-minLat)/2;
   avgLng =minLng+ (maxLng-minLng)/2;
@@ -255,7 +271,9 @@ getCenter(){
     equals: Boolean,
   }
   const width = Math.abs(this.mapControl.pointToPixel(min).x-this.mapControl.pointToPixel(max).x);
-  const zoom = this.mapControl.getZoom() - Math.log2(width/this.sight);
+  const height = Math.abs(this.mapControl.pointToPixel(min).y-this.mapControl.pointToPixel(max).y);
+  const critera = Math.max(width,height);
+  const zoom = this.mapControl.getZoom() - Math.log2(critera/this.sight);
   return {lat:avgLat, lng:avgLng ,zoom: zoom};
 }
 setAnimation(marker: BMarker): void {

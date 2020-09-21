@@ -1,39 +1,85 @@
 <div fxLayout="row">
   <div fxFlex.gt-sm="100%">
+   <ng-container *ngIf="tableStatus">
+    <div class="vehicleTable">
+      <div class="closeBUTTON">
+        <button mat-icon-button color="warn" (click)="tableClose()">
+          <mat-icon>close</mat-icon>
+        </button>
+      </div>
+      <table mat-table [dataSource]="dataSourceBe" matSort>
+        <!-- Position Column -->
+        <ng-container matColumnDef="Plate">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header> Plate </th>
+          <td mat-cell *matCellDef="let element"> {{element.Plate}} </td>
+        </ng-container>
+
+        <!-- Name Column -->
+        <ng-container matColumnDef="cameraID">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header> CameraID </th>
+          <td mat-cell *matCellDef="let element"> {{element.cameraID}} </td>
+        </ng-container>
+
+        <!-- Weight Column -->
+        <ng-container matColumnDef="lat">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header> lat </th>
+          <td mat-cell *matCellDef="let element"> {{element.lat}} </td>
+        </ng-container>
+
+        <!-- Symbol Column -->
+        <ng-container matColumnDef="lng">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header> lng </th>
+          <td mat-cell *matCellDef="let element"> {{element.lng}} </td>
+        </ng-container>
+        <tr mat-header-row *matHeaderRowDef="tableBehaviorColBe"></tr>
+        <tr mat-row *matRowDef="let row; columns: tableBehaviorColBe;"></tr>
+      </table>
+  </div>
+   </ng-container>
     <div class='mapDiv'>
-      <baidu-map [options]="optionsMap" (loaded)="mapLoaded($event)">
+      <baidu-map [options]="optionsMap" (loaded)="mapLoaded($event)" appMousePosition>
         <control type="navigation" [options]="navOptionsMap"></control>
         <ng-container *ngFor="let marker of markers;let i = index">
           <ng-container  *ngIf="selectionStatus[i]===true">
-          <!-- <marker
-          [point]="marker.point" [options]="marker.options"
-          (loaded)="setAnimation($event)">
-          </marker> -->
-          <!-- <circle [center]="marker.point" radius="100" [options]="circleOptions"></circle> -->
           <canvaslayer [options]="marker.canvaslayerOptions"></canvaslayer>
           </ng-container>
         </ng-container>
       </baidu-map>
+      <div class="introductionStatus">
+        <mat-toolbar-row>
+          <span>start</span>
+          <mat-icon class="example-icon" style="color:blue">circle</mat-icon>
+          &nbsp;&nbsp;
+          <span>stop</span>
+          <mat-icon class="example-icon" style="color:red">circle</mat-icon>
+        </mat-toolbar-row>
+      </div>
     </div>
     <div class='leftsideDiv'>
       <mat-card>
         <mat-card-content>
-          <mat-form-field>
-            <input matInput list="id-car" placeholder="Search Vehicle" [(ngModel)]="this.query.query"  (keyup)="getMonitorSeachlist()" (change)="searchConfirm()">
-          </mat-form-field>
-          <datalist id="id-car">
-            <option *ngFor="let item of searchResult" [value]="item.name">{{item.name}}</option>
-          </datalist>
-        </mat-card-content>
-        <mat-card-content>
              <mat-checkbox (change)="checkBoxall()" [(ngModel)]="selectAll">
-               Search list: {{foundedItem.length}}
+              <mat-form-field>
+                <input matInput list="id-car" placeholder="Search Vehicle" [(ngModel)]="key">
+              </mat-form-field>
+              <!-- <datalist id="id-car">
+                <option *ngFor="let item of searchResult" [value]="item.VehicleNumber">{{item.VehicleNumber}}</option>
+              </datalist> -->
              </mat-checkbox>
-             <mat-progress-bar [mode]="foundedItem.length? 'determinate':'buffer'" [value]="foundedItem.length? 100:0"></mat-progress-bar>
-             <hr/>
-             <mat-checkbox *ngFor="let item of foundedItem; let i = index" [value]="i" [(ngModel)]="selectionStatus[i]">
-                {{item.name}}
-             </mat-checkbox>
+             <mat-progress-bar [mode]="foundedItem.length? 'determinate':'buffer'" [style.display]="foundedItem.length? 'none':'block'" [value]="foundedItem.length? 100:0"></mat-progress-bar>
+             <ng-container *ngFor="let item of foundedItem;let i = index">
+              <ng-container  *ngIf="checkKey(key,item.VehicleNumber)">
+                <div class="vehicleList">
+                  <mat-checkbox  [value]="i" [(ngModel)]="selectionStatus[i]">
+                    <span> {{item.VehicleNumber}}</span>
+                  </mat-checkbox>
+                    <mat-icon class="example-icon" [style.color]="item.status=='start'?'blue':'red'">circle</mat-icon>
+                </div>
+                <div class="buttonDiv" style="text-align: center; margin-top: 15px;">
+                  <button mat-stroked-button color="primary" (click)="showInfo()">Show Vehicle Info</button>
+                </div>
+              </ng-container>
+            </ng-container>
         </mat-card-content>
       </mat-card>
     </div>

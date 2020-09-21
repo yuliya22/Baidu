@@ -20,20 +20,9 @@ export class ActivationComponent implements OnInit {
 
   ngOnInit() {
     this.formGroup = this._formBuilder.group({
-      VehicleID: ['', Validators.required],
-      PlateNumber: ['', Validators.required],
-      DriverName: ['', Validators.required],
-      Country: ['', Validators.required],
-      Group: ['', Validators.required],
-			Category: ['', Validators.required],
-			EngineType: ['', Validators.required],
-			VIN: ['', Validators.required],
-			Time: ['', Validators.required],
-			cardName: ['', Validators.required],
-			cardNumber: ['', Validators.required],
-			ExpirationDate: ['', Validators.required],
-      SecurityCode: ['', Validators.required],
-      AutoRenew:['', Validators.required],
+      VehicleNumber: ['', Validators.required],
+      CameraID: ['', Validators.required],
+      PhoneNumber: ['', Validators.required],
 		});
   }
   getAll(){
@@ -55,7 +44,7 @@ export class ActivationComponent implements OnInit {
           alert("successfully registered!");
         },
         err=>{
-          alert(err);
+          alert(err.error.message);
         }
       );
     }

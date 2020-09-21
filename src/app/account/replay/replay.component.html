@@ -1,1 +1,92 @@
-<p>replay works!</p>
+<div fxLayout="row">
+  <div fxFlex.gt-sm="100%">
+    <div class='leftsideDiv'>
+      <mat-card>
+        <mat-card-content>
+          <mat-form-field>
+            <input matInput list="id-car" placeholder="Search Vehicle" [(ngModel)]="key">
+          </mat-form-field>
+          <!-- <datalist id="id-car">
+              <option *ngFor="let item of searchResult" [value]="item.VehicleNumber">{{item.VehicleNumber}}</option>
+          </datalist> -->
+          <mat-progress-bar [mode]="foundedItem.length? 'determinate':'buffer'"
+            [style.display]="foundedItem.length? 'none':'block'" [value]="foundedItem.length? 100:0"></mat-progress-bar>
+          <div class="vehicleTable">
+            <mat-radio-group [(ngModel)]="vehicleNumber">
+              <ng-container *ngFor="let item of foundedItem;let i = index">
+                <ng-container *ngIf="checkKey(key,item.VehicleNumber)">
+                  <div class="vehicleList">
+                    <mat-radio-button class="example-margin" [value]="item.VehicleNumber" (change)="radioChange()">
+                      {{item.VehicleNumber}}</mat-radio-button>
+                    <mat-icon class="example-icon" [style.color]="item.status=='start'?'blue':'red'">circle</mat-icon>
+                  </div>
+                </ng-container>
+              </ng-container>
+            </mat-radio-group>
+          </div>
+          <div class="replayDIV">
+            <div class="dateDIV">
+              <mat-form-field appearance="fill">
+                <mat-label style="color: red;">{{trip.length==0?'No trip':''}}</mat-label>
+                <input matInput  [value]="date.toISOString()" [(ngModel)]="date" [matDatepicker]="picker2" (dateChange)="datechange()">
+                <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+                <mat-datepicker #picker2></mat-datepicker>
+              </mat-form-field>
+            </div>
+            <div class="progressDIV">
+              <mat-progress-bar mode="determinate" [value]="progress"></mat-progress-bar>
+            </div>
+            <div class="timeDIV">
+              <ng-container *ngIf="trip.length>0">
+                <p>{{time}}</p>
+              </ng-container>
+            </div>
+            <div fxLayout="row" class="controlDIV">
+              <div class="prevDate">
+                <button mat-mini-fab color="accent" (click)="prevDate()">
+                  <mat-icon>remove_from_queue</mat-icon>
+                </button>
+              </div>
+              <div class="prevRoute" (click)="prevFrame()">
+                <button mat-mini-fab color="warn">
+                  <mat-icon>skip_previous</mat-icon>
+                </button>
+              </div>
+              <div class="play">
+                <button mat-mini-fab color="warn" (click)="start==false?startTrip():pauseTrip()">
+                  <mat-icon>{{start==false?'play_arrow':'pause'}}</mat-icon>
+                </button>
+              </div>
+              <div class="nextRoute" (click)="nextFrame()">
+                <button mat-mini-fab color="warn">
+                  <mat-icon>skip_next</mat-icon>
+                </button>
+              </div>
+              <div class="nextDate" (click)="nextDate()">
+                <button mat-mini-fab color="accent">
+                  <mat-icon>add_to_queue</mat-icon>
+                </button>
+              </div>
+            </div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </div>
+    <div class='mapDiv'>
+      <baidu-map [options]="optionsMap" (loaded)="mapLoaded($event)">
+        <ng-container *ngFor="let marker of markers;let i = index">
+          <canvaslayer [options]="marker.layerCanvas"></canvaslayer>
+        </ng-container>
+      </baidu-map>
+      <div class="introductionStatus">
+        <mat-toolbar-row>
+          <span>start</span>
+          <mat-icon class="example-icon" style="color:blue">circle</mat-icon>
+          &nbsp;&nbsp;
+          <span>stop</span>
+          <mat-icon class="example-icon" style="color:red">circle</mat-icon>
+        </mat-toolbar-row>
+      </div>
+    </div>
+  </div>
+</div>

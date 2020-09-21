@@ -1,1 +1,245 @@
-<p>reports works!</p>
+<div fxLayout="row">
+  <div fxFlex.gt-sm="100%">
+    <div class='leftsideDiv'>
+      <mat-card>
+        <mat-card-content>
+          <mat-form-field>
+            <input matInput list="id-car" placeholder="Search Vehicle" [(ngModel)]="key">
+          </mat-form-field>
+          <mat-progress-bar [mode]="foundedItem.length? 'determinate':'buffer'"
+            [style.display]="foundedItem.length? 'none':'block'" [value]="foundedItem.length? 100:0"></mat-progress-bar>
+          <div class="vehicleTable">
+            <mat-radio-group [(ngModel)]="vehicleNumber">
+              <ng-container *ngFor="let item of foundedItem;let i = index">
+                <ng-container *ngIf="checkKey(key,item.VehicleNumber)">
+                  <div class="vehicleList">
+                    <mat-radio-button class="example-margin" [value]="item.VehicleNumber">
+                      {{item.VehicleNumber}}</mat-radio-button>
+                    <mat-icon class="example-icon" [style.color]="item.status=='start'?'blue':'red'">circle</mat-icon>
+                  </div>
+                </ng-container>
+              </ng-container>
+            </mat-radio-group>
+          </div>
+          <div class="replayDIV">
+            <div class="dateDIV">
+              <mat-form-field appearance="fill">
+                <mat-label style="color: red;">Choose date From</mat-label>
+                <input matInput  [value]="dateFrom?dateFrom.toISOString():''" [(ngModel)]="dateFrom" [matDatepicker]="picker1">
+                <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+                <mat-datepicker #picker1></mat-datepicker>
+              </mat-form-field>
+            </div>
+            <div class="dateDIV">
+              <mat-form-field appearance="fill">
+                <mat-label style="color: red;">Choose date To</mat-label>
+                <input matInput  [value]="dateTo?dateTo.toISOString():''" [(ngModel)]="dateTo" [matDatepicker]="picker2">
+                <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+                <mat-datepicker #picker2></mat-datepicker>
+              </mat-form-field>
+            </div>
+            <div class="dateDIV">
+              <button mat-stroked-button color="primary" (click)="getInfo()">Show information</button>
+            </div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </div>
+    <div class='mapDiv'>
+      <div class="chartDiv">
+              <div class="d-flex flex-wrap">
+                  <div>
+                      <mat-card-title>Reports Overview</mat-card-title>
+                   </div>
+                  <div class="ml-auto">
+                      <ul class="list-inline">
+                          <li>
+                              <h6 class="text-success m-0"><i class="mdi mdi-checkbox-blank-circle font-10 m-r-10 "></i>Distance(miles)</h6> </li>
+                          <li>
+                              <h6 class=" text-info m-0"><i class="mdi mdi-checkbox-blank-circle font-10 m-r-10"></i>Score(mph)</h6> </li>
+                      </ul>
+                  </div>
+              </div>
+              <div class="barchrt" style="height:360px;">
+                <ng-container *ngIf="values.length>0">
+                  <x-chartist class="" [data]="barChart1.data"
+                  [type]="barChart1.type" [options]="barChart1.options"
+                  [responsiveOptions]="barChart1.responsiveOptions" [events]="barChart1.events">
+                 </x-chartist>
+                </ng-container>
+                <ng-container *ngIf="values.length==0">
+                  <x-chartist class="" [data]="barChart1.data"
+                  [type]="barChart1.type" [options]="barChart1.options"
+                  [responsiveOptions]="barChart1.responsiveOptions" [events]="barChart1.events">
+                 </x-chartist>
+                </ng-container>
+              </div>
+      </div>
+      <div class="summaryDiv">
+        <div class="topicGeneral">
+          <p>Trip Summary</p>
+         </div>
+         <div fxLayout="row wrap">
+          <div fxFlex.gt-lg="25" fxFlex.gt-md="25" fxFlex.gt-xs="50" fxFlex="50">
+            <div class="row cont">
+              <div class="subTopic">Distance</div>
+              <div class="subValue">{{tripSum.distance}}</div>
+            </div>
+          </div>
+          <div fxFlex.gt-lg="25" fxFlex.gt-md="25" fxFlex.gt-xs="50" fxFlex="50">
+            <div class="row cont">
+              <div class="subTopic">Stops</div>
+              <div class="subValue">{{tripSum.stops}}</div>
+            </div>
+          </div>
+          <div fxFlex.gt-lg="25" fxFlex.gt-md="25" fxFlex.gt-xs="50" fxFlex="50">
+            <div class="row cont">
+              <div class="subTopic">AvgSpeed</div>
+              <div class="subValue">{{tripSum.avgSpeed}}</div>
+            </div>
+          </div>
+          <div fxFlex.gt-lg="25" fxFlex.gt-md="25" fxFlex.gt-xs="50" fxFlex="50">
+            <div class="row cont">
+              <div class="subTopic">Fuel</div>
+              <div class="subValue">{{tripSum.Fuel}}</div>
+            </div>
+          </div>
+          <div fxFlex.gt-lg="25" fxFlex.gt-md="25" fxFlex.gt-xs="50" fxFlex="50">
+            <div class="row cont">
+              <div class="subTopic">RapidAccel</div>
+              <div class="subValue">{{tripSum.RapidAccel}}</div>
+            </div>
+          </div>
+          <div fxFlex.gt-lg="25" fxFlex.gt-md="25" fxFlex.gt-xs="50" fxFlex="50">
+            <div class="row cont">
+              <div class="subTopic">HarshBracking</div>
+              <div class="subValue">{{tripSum.HarshBracking}}</div>
+            </div>
+          </div>
+          <div fxFlex.gt-lg="25" fxFlex.gt-md="25" fxFlex.gt-xs="50" fxFlex="50">
+            <div class="row cont">
+              <div class="subTopic">EngineIdle</div>
+              <div class="subValue">{{tripSum.EngineIdle}}</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- for tableBehavior -->
+      <div class="summaryDiv">
+        <div class="topicGeneral">
+          <p>Mileage, Fuel and Driver Behavior</p>
+         </div>
+         <div fxLayout="row wrap">
+          <div class="TableBehavior">
+            <table mat-table [dataSource]="dataSourceBe" matSort>
+              <!-- Position Column -->
+              <ng-container matColumnDef="Date">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Date </th>
+                <td mat-cell *matCellDef="let element"> {{element.Date}} </td>
+              </ng-container>
+
+              <!-- Name Column -->
+              <ng-container matColumnDef="distance">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Distance </th>
+                <td mat-cell *matCellDef="let element"> {{element.distance}} </td>
+              </ng-container>
+
+              <!-- Weight Column -->
+              <ng-container matColumnDef="stops">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Stops </th>
+                <td mat-cell *matCellDef="let element"> {{element.stops}} </td>
+              </ng-container>
+
+              <!-- Symbol Column -->
+              <ng-container matColumnDef="avgSpeed">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> AvgSpeed </th>
+                <td mat-cell *matCellDef="let element"> {{element.avgSpeed}} </td>
+              </ng-container>
+                <!-- Symbol Column -->
+              <ng-container matColumnDef="Fuel">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Fuel </th>
+                <td mat-cell *matCellDef="let element"> {{element.Fuel}} </td>
+              </ng-container>
+                 <!-- Symbol Column -->
+                 <ng-container matColumnDef="RapidAccel">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header> RapidAccel </th>
+                  <td mat-cell *matCellDef="let element"> {{element.RapidAccel}} </td>
+                </ng-container>
+                   <!-- Symbol Column -->
+              <ng-container matColumnDef="HarshBracking">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> HarshBracking </th>
+                <td mat-cell *matCellDef="let element"> {{element.HarshBracking}} </td>
+              </ng-container>
+              <!-- Symbol Column -->
+              <ng-container matColumnDef="EngineIdle">
+               <th mat-header-cell *matHeaderCellDef mat-sort-header> EngineIdle </th>
+               <td mat-cell *matCellDef="let element"> {{element.EngineIdle}} </td>
+              </ng-container>
+              <tr mat-header-row *matHeaderRowDef="tableBehaviorColBe"></tr>
+              <tr mat-row *matRowDef="let row; columns: tableBehaviorColBe;"></tr>
+            </table>
+
+            <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+          </div>
+        </div>
+      </div>
+        <!-- for tableTrip -->
+        <div class="summaryDiv">
+          <div class="topicGeneral">
+            <p>Detailed Trip Log (Statewise fuel/mileage available for business plan)</p>
+           </div>
+           <div fxLayout="row wrap">
+            <div class="TableBehavior">
+              <table mat-table [dataSource]="dataSourceTrip" matSort>
+                <!-- Position Column -->
+                <ng-container matColumnDef="Date">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header> Date </th>
+                  <td mat-cell *matCellDef="let element"> {{element.Date}} </td>
+                </ng-container>
+
+                <!-- Name Column -->
+                <ng-container matColumnDef="distance">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header> Distance </th>
+                  <td mat-cell *matCellDef="let element"> {{element.distance}} </td>
+                </ng-container>
+
+                <!-- Weight Column -->
+                <ng-container matColumnDef="stops">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header> Stops </th>
+                  <td mat-cell *matCellDef="let element"> {{element.stops}} </td>
+                </ng-container>
+
+                <!-- Symbol Column -->
+                <ng-container matColumnDef="avgSpeed">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header> AvgSpeed </th>
+                  <td mat-cell *matCellDef="let element"> {{element.avgSpeed}} </td>
+                </ng-container>
+                  <!-- Symbol Column -->
+                <ng-container matColumnDef="Fuel">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header> Fuel </th>
+                  <td mat-cell *matCellDef="let element"> {{element.Fuel}} </td>
+                </ng-container>
+                   <!-- Symbol Column -->
+                   <ng-container matColumnDef="RapidAccel">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header> RapidAccel </th>
+                    <td mat-cell *matCellDef="let element"> {{element.RapidAccel}} </td>
+                  </ng-container>
+                     <!-- Symbol Column -->
+                <ng-container matColumnDef="HarshBracking">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header> HarshBracking </th>
+                  <td mat-cell *matCellDef="let element"> {{element.HarshBracking}} </td>
+                </ng-container>
+                <!-- Symbol Column -->
+                <ng-container matColumnDef="EngineIdle">
+                 <th mat-header-cell *matHeaderCellDef mat-sort-header> EngineIdle </th>
+                 <td mat-cell *matCellDef="let element"> {{element.EngineIdle}} </td>
+                </ng-container>
+                <tr mat-header-row *matHeaderRowDef="tableBehaviorColTrip"></tr>
+                <tr mat-row *matRowDef="let row; columns: tableBehaviorColTrip;"></tr>
+              </table>
+              <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+            </div>
+          </div>
+        </div>
+    </div>
+</div>
